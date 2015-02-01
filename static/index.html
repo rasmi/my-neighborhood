@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" ng-app="myneighborhood">
+<head>
+	<meta charset="utf-8">
+	<title>My Neighborhood</title>
+
+	<link rel="stylesheet" href="static/css/app.css">
+	<link rel="stylesheet" href="static/css/bootstrap.css">
+	<link rel="stylesheet" href="static/css/nv.d3.css">
+
+	<script src="static/lib/lodash.js"></script>
+	<script src="static/lib/jquery.js"></script>
+	<script src="static/lib/d3.js"></script>
+	<script src="static/lib/nv.d3.js"></script>
+	<script src="static/lib/angular.js"></script>
+	<script src="static/lib/angular-nvd3.js"></script>
+	<script src="static/lib/ui-bootstrap.js"></script>
+	<script src="static/lib/angular-google-maps.js"></script>
+	<script src="static/lib/ngGeolocation.js"></script>
+
+	<script src="static/js/app.js"></script>
+</head>
+<body ng-controller="homeCtrl">
+	<div class="header-container">
+		<h1>My Neighborhood</h1>
+	</div>
+	<form role="form">
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Zip Code" ng-model="zipcode">
+			<select ng-model="category" ng-if="categories.length > 0" ng-options="category as category for category in categories"  ng-change="getComplaintData(category)"></select>
+		</div>
+	</form>
+	<div class="row">
+		<ui-gmap-google-map class="col-md-8" center="map.center" draggable="true" pan="true" zoom="map.zoom">
+			<ui-gmap-layer namespace="visualization" type="HeatmapLayer" show="true" onCreated="map.heatLayerCallback"></ui-gmap-layer>
+		</ui-gmap-google-map>
+		<div class="col-md-4"><h3>Category Frequency</h3>
+			<nvd3 options="chartoptions" data="frequency"></nvd3>
+		</div>
+	</div>
+</div>
+</body>
+</html>

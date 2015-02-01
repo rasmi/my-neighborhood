@@ -1,0 +1,3 @@
+# My Neighborhood
+
+A heat map that allows anyone to quickly browse NYC 311 service requests in their area. Allow geolocation or enter a zipcode, or just pan around the map and watch it update frequency and heat layer data as you move. Categories are displayed in a pie chart on the right and can be selected from a dropdown (TODO: allow selecting by clicking the pie chart). To run the project locally for development, you will need a secrets.py file in the `api` folder with a [GeoNames API](http://www.geonames.org/) username.

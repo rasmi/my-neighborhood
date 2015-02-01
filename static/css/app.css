@@ -1,0 +1,14 @@
+.header-container {
+	background-color:#00889b;
+	padding-top:1px;
+	padding-bottom: 5px;
+}
+
+.header-container h1 {
+	color: white;
+	padding-left: 10px;
+}
+
+.angular-google-map-container {
+	height: 660px;
+}
