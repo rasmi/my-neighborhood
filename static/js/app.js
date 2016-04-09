@@ -1,4 +1,4 @@
-angular.module('myneighborhood', ['ui.bootstrap', 'nvd3', 'uiGmapgoogle-maps', 'ngGeolocation'])
+angular.module('myneighborhood', ['ui.bootstrap', 'nvd3', 'uiGmapgoogle-maps'])
 .factory('_', ['$window', function($window){
 	return $window._;
 }])
@@ -8,7 +8,7 @@ angular.module('myneighborhood', ['ui.bootstrap', 'nvd3', 'uiGmapgoogle-maps', '
 		visualRefresh: true
 	});
 }])
-.controller('homeCtrl', ['$scope', '$http', '_', 'uiGmapGoogleMapApi', '$geolocation', function($scope, $http, _, GoogleMapApi, $geolocation) {	
+.controller('homeCtrl', ['$scope', '$http', '_', 'uiGmapGoogleMapApi', function($scope, $http, _, GoogleMapApi) {	
 	$http.get('username').success(function(data){ 
 		$scope.username = data;
 	});
@@ -25,7 +25,7 @@ angular.module('myneighborhood', ['ui.bootstrap', 'nvd3', 'uiGmapgoogle-maps', '
 
 	$scope.map = {
 		center: $scope.defaultLocation,
-		zoom: 11,
+		zoom: 14,
 		heatLayerCallback: function (layer) {
 			$scope.heatmaplayer = layer;
 	  	}
@@ -48,7 +48,6 @@ angular.module('myneighborhood', ['ui.bootstrap', 'nvd3', 'uiGmapgoogle-maps', '
 	$scope.category = "HEATING";
 	$scope.categories = [];
 	$scope.$watch('zipcode', function(newValue, oldValue) {
-		//console.log("NEW ZIPCODE: " + newValue);
 		if (newValue.length == 5){
 			$http.get('categories', {
 				params: {"zipcode": $scope.zipcode}
@@ -75,8 +74,6 @@ angular.module('myneighborhood', ['ui.bootstrap', 'nvd3', 'uiGmapgoogle-maps', '
 				}
 			}).success(function(data) {
 				$scope.complaintData = data.locations;
-				//console.log("COMPLAINT DATA:");
-				//console.log($scope.complaintData);
 				var latlngdata = []
 				_.forEach($scope.complaintData, function(coordinate) {
 					latlngdata.push(new google.maps.LatLng(coordinate[0], coordinate[1]));
@@ -99,19 +96,10 @@ angular.module('myneighborhood', ['ui.bootstrap', 'nvd3', 'uiGmapgoogle-maps', '
 					"longitude": data.postalcodes[0]['lng']
 				} ;
 				$scope.map.center = ziplocation;
-				//$scope.map.zoom = 15;
 			});
 	};
 
-	/*
-	//TODO: Update data when map center is dragged.
-	$scope.$watch('map', function(newValue, oldValue) {
-		console.log("NEW CENTER");
-	}, true)
-	*/
-
 	$scope.$watch('position', function(newValue, oldValue) {
-		//console.log("NEW POSITION");
 		if (newValue) {
 		$http.get('http://api.geonames.org/findNearbyPostalCodesJSON', {
 			params: {
@@ -129,23 +117,6 @@ angular.module('myneighborhood', ['ui.bootstrap', 'nvd3', 'uiGmapgoogle-maps', '
 	$scope.$watch('map.center', function() {
 		$scope.position = $scope.map.center;
 	}, true);
-
-	$geolocation.getCurrentPosition().then(function(position) {
-		var coordinates = position.coords;
-		if ((coordinates.longitude < -74.25 || coordinates.longitude > -73.65) ||
-			(coordinates.latitude < 40.45 || coordinates.latitude > 40.90)) {
-			// Coordinates not in NYC, just use default location.
-			coordinates = $scope.defaultLocation;
-		}
-		return coordinates;
-	}, function() {
-		// Error, no location detected.
-		return $scope.defaultLocation;
-	}).then(function(coordinates) {
-		$scope.map.center = coordinates;
-		$scope.map.zoom = 15;
-		$scope.position = coordinates;
-	});
 
 	});
 }]);
